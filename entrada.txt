@@ -1,0 +1,9 @@
+3
+Bruno 3 4 8 3 10 5 5
+Daniel 1 5 25
+Alan 2 3 15 1 5
+
+Zeze 1 3 9
+Simao 2 7 13 1 9
+
+
