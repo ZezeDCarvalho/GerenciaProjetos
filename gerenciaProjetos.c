@@ -261,16 +261,18 @@ void organizarNomesEmProjeto(PTno Lp) {
  *      5: [(Bruno,5),(Daniel,25)]
  */
 void mostraPorProj(PTno Lp) {
-    PTnome N;
-    PTproj P;
     PTno Ln;
+    //PTnome N;
+    //PTproj P;
     while (Lp) {
-        P = Lp->info;
-        printf("%2d: [", P->id);
-        Ln = P->lNome;
+        //P = Lp->info;
+        //printf("%2d: [", P->id);
+        printf("%2d: [", ((PTproj) Lp->info)->id);
+        Ln = ((PTproj) Lp->info)->lNome;
         while (Ln) {
-            N = Ln->info;
-            printf("(%s,%d)", N->nome, N->tmp);
+            //N = Ln->info;
+            //printf("(%s,%d)", N->nome, N->tmp);
+            printf("(%s,%d)", ((PTnome) Ln->info)->nome, ((PTnome) Ln->info)->tmp);
             Ln = Ln->prox;
             if (Ln) printf(", ");
         }
@@ -284,20 +286,22 @@ void mostraPorProj(PTno Lp) {
 int projMaisTempo(PTno Lp) {
     int id, maior = 0;
     int menor;
-    PTnome N;
-    PTproj P;
     PTno Ln;
+    //PTnome N;
+    //PTproj P;
     while (Lp) {
-        P = Lp->info;
-        Ln = P->lNome;
+        //P = Lp->info;
+        //Ln = P->lNome;
+        Ln = ((PTproj) Lp->info)->lNome;
         menor = 0;
         while (Ln) {
-            N = Ln->info;
-            menor += N->tmp;
+            //N = Ln->info;
+            menor += ((PTnome) Ln->info)->tmp;
             Ln = Ln->prox;
         }
         if (menor > maior){
-            id = P->id;
+            //id = P->id;
+            id = ((PTproj) Lp->info)->id;
             maior = menor;
         }
         Lp = Lp->prox;
@@ -315,12 +319,10 @@ void nomeMaisTempo(PTno Ln, char *nome) {
     while (Ln) {
         //N = Ln->info;
         //Lp = N->lProj;
-        //equivalente as duas de cima
         Lp = (((PTnome) Ln->info)->lProj);
         menor = 0;
         while (Lp) {
             //P = Lp->info;
-            //equivalente a de cima
             menor += ((PTproj)Lp->info)->tmp;
             Lp = Lp->prox;
         }
@@ -342,12 +344,10 @@ int tempoTotal(PTno Ln) {
     while (Ln) {
         //N = Ln->info;
         //Lp = N->lProj;
-        // equivalente as duas de cima
         Lp = (((PTnome) Ln->info)->lProj);
         while (Lp) {
             //P = Lp->info;
             //total += P->tmp;
-            //linha equivalente as duas de cima
             total += ((PTproj)Lp->info)->tmp;
             Lp = Lp->prox;
         }
