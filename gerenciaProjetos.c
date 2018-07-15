@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define PORCENTO 100
+
 /// PONTEIROS
 typedef struct nomeNo * PTnome; // pt estrutura nome
 typedef struct projNo * PTproj; // pt estrutura projeto
@@ -180,25 +182,29 @@ PTno converte(PTno Ln) {
 
     /// lista de nomes
     while (Ln) {
-        N = Ln->info;
-        Lp = N->lProj;
+        //N = Ln->info;
+        Lp = ((PTnome) Ln->info)->lProj;
         /// lista de projetos
         while (Lp) {
             /// ponteiro para projeto
-            noProjeto = Lp->info;
+            //noProjeto = Lp->info;
+            /// alocando o estrutura nome
+            noNome = malloc(sizeof (nomeNo));
+            /// setando o nome e o tempo na estrutura nome
+            //strcpy(noNome->nome, N->nome);
+            strcpy(noNome->nome, ((PTnome) Ln->info)->nome);
+            //strlcpy(noNome->nome, N->nome, 10);
+            //noNome->tmp = noProjeto->tmp;
+            noNome->tmp = ((PTproj) Lp->info)->tmp;
+            /// alocando no de nome
+            ptNoNome = malloc(sizeof (no));
+            /// setando o ponteiro info para estrutura nome alocada
+            ptNoNome->info = noNome;
             /// alocacao da estrutura de projeto
             P = malloc(sizeof (projNo));
             /// setando id do projeto
-            P->id = noProjeto->id;
-            /// alocando no de nome e a estrutura nome
-            ptNoNome = malloc(sizeof (no));
-            noNome = malloc(sizeof (nomeNo));
-            /// setando o nome e o tempo na estrutura nome
-            strcpy(noNome->nome, N->nome);
-            //strlcpy(noNome->nome, N->nome, 10);
-            noNome->tmp = noProjeto->tmp;
-            /// setando o ponteiro info para estrutura nome alocada
-            ptNoNome->info = noNome;
+            //P->id = noProjeto->id;
+            P->id = ((PTproj) Lp->info)->id;
             /// inserindo o no nome na lista de nomes
             P->lNome = insere(P->lNome, ptNoNome, compNome);
             /// alocando o no projeto 
@@ -214,7 +220,33 @@ PTno converte(PTno Ln) {
         Ln = Ln->prox;
     }
     /// percorrer a lista novamente acertando a lista de nomes aos projetos
-    organizarNomesEmProjeto(Novo);
+    //organizarNomesEmProjeto(Novo);
+    
+    Lp = Novo; ///projeto anterior
+    ptNoProjeto = Novo->prox; ///projeto atual
+    /// enquanto não é o fim da lista de projetos
+    while (ptNoProjeto) {
+        /// projeto atual
+        P = ptNoProjeto->info;
+        /// se existe projeto atual e se os id's são iguais
+        if (ptNoProjeto && compId(Lp, ptNoProjeto) == 0) {
+            /// insere na lista de nomes do projeto anterior, a lista de nomes do projeto atual
+            ((PTproj) Lp->info)->lNome = insere(((PTproj) Lp->info)->lNome, P->lNome, compNome);
+            /// proximo do no do projeto anterior aponta para o proximo no do projeto atual
+            Lp->prox = ptNoProjeto->prox;
+            /// desalocar o no do projeto
+            free(P);
+            /// desalocar no da lista de projeto
+            free(ptNoProjeto);
+            /// projeto atual recebe o proximo do anterior
+            ptNoProjeto = Lp->prox;
+        } else { /// se os id's não são iguais 
+            Lp = ptNoProjeto; /// tanto esta como a debaixo esta correta
+            //Lp = Lp->prox;
+            ptNoProjeto = ptNoProjeto->prox; /// tanto esta como a debaixo esta correta 
+            //ptNoProjeto = ptNoProjeto->prox;
+        }
+    }
     return Novo;
 }
 
@@ -243,10 +275,10 @@ void organizarNomesEmProjeto(PTno Lp) {
             ptProjetoAtual = ptProjetoAnterior->prox;
         } else { /// se os id's não são iguais 
             /// ponteiro do no anterior recebe seu proximo
-            ptProjetoAnterior = ptProjetoAtual;     /// tanto esta como a debaixo esta correta
+            ptProjetoAnterior = ptProjetoAtual; /// tanto esta como a debaixo esta correta
             //ptProjetoAnterior = ptProjetoAnterior->prox;
             /// ponteiro do no atual recebe o seu proximo;
-            ptProjetoAtual = ptProjetoAnterior->prox;   /// tanto esta como a debaixo esta correta 
+            ptProjetoAtual = ptProjetoAnterior->prox; /// tanto esta como a debaixo esta correta 
             //ptProjetoAtual = ptProjetoAtual->prox;
         }
     }
@@ -299,7 +331,7 @@ int projMaisTempo(PTno Lp) {
             menor += ((PTnome) Ln->info)->tmp;
             Ln = Ln->prox;
         }
-        if (menor > maior){
+        if (menor > maior) {
             //id = P->id;
             id = ((PTproj) Lp->info)->id;
             maior = menor;
@@ -323,10 +355,10 @@ void nomeMaisTempo(PTno Ln, char *nome) {
         menor = 0;
         while (Lp) {
             //P = Lp->info;
-            menor += ((PTproj)Lp->info)->tmp;
+            menor += ((PTproj) Lp->info)->tmp;
             Lp = Lp->prox;
         }
-        if (menor > maior){
+        if (menor > maior) {
             //strcpy(nome, N->nome);
             strcpy(nome, ((PTnome) Ln->info)->nome);
             maior = menor;
@@ -348,7 +380,7 @@ int tempoTotal(PTno Ln) {
         while (Lp) {
             //P = Lp->info;
             //total += P->tmp;
-            total += ((PTproj)Lp->info)->tmp;
+            total += ((PTproj) Lp->info)->tmp;
             Lp = Lp->prox;
         }
         Ln = Ln->prox;
@@ -364,7 +396,25 @@ int tempoTotal(PTno Ln) {
  *      Daniel - 36.76%
  */
 void mostraPercAlocado(PTno Ln) {
-    // Acrescentar o codigo da funcao aqui
+    PTno Lp;
+    double hrsTotalProjetos = tempoTotal(Ln);
+    double horasPorPessoa = 0;
+
+    printf("\n");
+    while (Ln) {
+        //N = Ln->info;
+        //Lp = N->lProj;
+        Lp = ((PTnome) Ln->info)->lProj;
+        horasPorPessoa = 0;
+        while (Lp) {
+            //P = Lp->info;
+            //total += P->tmp;
+            horasPorPessoa += ((PTproj) Lp->info)->tmp;
+            Lp = Lp->prox;
+        }
+        printf("%s - %.2f%%\n", ((PTnome) Ln->info)->nome, (horasPorPessoa * PORCENTO) / hrsTotalProjetos);
+        Ln = Ln->prox;
+    }
 }
 
 int main(int argc, char** argv) {
