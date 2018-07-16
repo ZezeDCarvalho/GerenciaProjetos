@@ -1,24 +1,28 @@
-/*----------------------------------------------------------+
- | UNIFAL – Universidade Federal de Alfenas.                |
- | Trabalho ...: Gerencia de projetos usando lista          |
- | Disciplina .: Estrutura de Dados I                       |
- | Professor ..: Luiz Eduardo da Silva                      |
- | Aluno ......: Maria José Silva de Carvalho               |
- | Email ......: mjsc.zeze@gmail.com                        |
- | Data .......: DD/06/2018                                 |
- +----------------------------------------------------------*/
+/*---------------------------------------------------------------+
+ | UNIFAL – Universidade Federal de Alfenas.                     |
+ | Trabalho ...: Gerencia de projetos usando lista               |
+ | Disciplina .: Estrutura de Dados I                            |
+ | Professor ..: Luiz Eduardo da Silva                           |
+ | Aluno ......: Maria José Silva de Carvalho                    |
+ | Email ......: mjsc.zeze@gmail.com                             |
+ | Data .......: DD/06/2018                                      |
+ +---------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define PORCENTO 100
 
-/// PONTEIROS
+/*---------------------------------------------------------------+ 
+ |--------------------- PONTEIROS                                |
+ +---------------------------------------------------------------*/
 typedef struct nomeNo * PTnome; // pt estrutura nome
 typedef struct projNo * PTproj; // pt estrutura projeto
 typedef struct no * PTno; // pt no
 
-/// REPRESENTACAO DA ESTRUTURA NOMES
+/*----------------------------------------------------------------+ 
+ |---------- REPRESENTACAO DA ESTRUTURA NOMES                     |
+ +----------------------------------------------------------------*/
 typedef struct nomeNo {
     char nome[10]; // nome do funcionario
 
@@ -28,29 +32,33 @@ typedef struct nomeNo {
     };
 } nomeNo;
 
-/// REPRESENTACAO DA ESTRUTURA PROJETOS
+/*----------------------------------------------------------------+ 
+ |---------- REPRESENTACAO DA ESTRUTURA PROJETOS                  |
+ +----------------------------------------------------------------*/
 typedef struct projNo {
     int id; // identificacao do projeto
-
     union {
         int tmp; // tempo OU
         PTno lNome; // lista de nomes
     };
 } projNo;
 
-/// REPRESENTACAO DA LISTA ENCADEADA
+/*----------------------------------------------------------------+ 
+ |---------- REPRESENTACAO DA LISTA ENCADEADA                     |
+ +----------------------------------------------------------------*/
 typedef struct no {
     void * info;
     PTno prox;
 } no;
 
-/*  FUNCAO GERAL DE INSERCAO NUMA LISTA ENCADEADA ORDENADA GERAL
- *  PARAMETROS:
- *      1. L = a lista onde inserir
- *      2. N = o novo no a inserir
- *      3. cmp = funcao de comparacao (ID ou NOME)
- *  A FUNCAO RETORNA A LISTA MODIFICADA PELA INSERCAO
- */
+/*----------------------------------------------------------------+ 
+ |- FUNCAO GERAL DE INSERCAO NUMA LISTA ENCADEADA ORDENADA GERAL  |
+ |  PARAMETROS:                                                   |
+ |       1. L =  a lista onde inserir                             |
+ |       2. N = o novo no a inserir                               |
+ |       3. cmp = funcao de comparacao (ID ou NOME)               |
+ |  A FUNCAO RETORNA A LISTA MODIFICADA PELA INSERCAO             |
+ +----------------------------------------------------------------*/
 PTno insere(PTno L, PTno N, int (*cmp)(const void *, const void *)) {
     PTno P = NULL, Q = L;
     while (Q && cmp(Q, N) < 0) {
@@ -67,18 +75,21 @@ PTno insere(PTno L, PTno N, int (*cmp)(const void *, const void *)) {
     return L;
 }
 
-/*  FUNCAO QUE RETORNA A COMPARACAO DE ID DE NOS
- *  RETORNA:
- *          negativo: SE P->info->id < Q->info->id
- *          zero    : SE P->info->id = Q->info->id
- *          positivo: SE P->info->id > Q->info->id
- */
+/*----------------------------------------------------------------+ 
+ |- FUNCAO QUE RETORNA A COMPARACAO DE ID DE NOS                  |
+ |  RETORNA:                                                      |
+ |       negativo: SE P->info->id < Q->info->id                   |
+ |       zero    : SE P->info->id = Q->info->id                   |
+ |       positivo: SE P->info->id > Q->info->id                   |
+ +----------------------------------------------------------------*/
 int compId(const void * P, const void * Q) {
     return ((PTproj) ((PTno) P)->info)->id -
             ((PTproj) ((PTno) Q)->info)->id;
 }
 
-/// FUNCAO QUE RETORNA A COMPARACAO DE NOMES DE NOS
+/*----------------------------------------------------------------+ 
+ |----- FUNCAO QUE RETORNA A COMPARACAO DE NOMES DE NOS           |
+ +----------------------------------------------------------------*/
 int compNome(const void * P, const void * Q) {
     return strcmp(((PTnome) ((PTno) P)->info)->nome,
             ((PTnome) ((PTno) Q)->info)->nome);
@@ -173,7 +184,9 @@ void mostraPorNome(PTno Ln) {
     printf("\n");
 }
 
-/// FUNCAO QUE CONVERTE A LISTA DE NOMES POR PROJETOS NUMA LISTA DE PROJETOS POR NOMES
+/*------------------------------------------------------------------------------------------+ 
+ |----- FUNCAO QUE CONVERTE A LISTA DE NOMES POR PROJETOS NUMA LISTA DE PROJETOS POR NOMES  |
+ +------------------------------------------------------------------------------------------*/
 PTno converte(PTno Ln) {
     PTno Novo = NULL, Lp;
     PTno ptNoProjeto, ptNoNome;
@@ -250,7 +263,9 @@ PTno converte(PTno Ln) {
     return Novo;
 }
 
-/// FUNCAO PARA ORGANIZAR A LISTA DE PROJETOS
+/*----------------------------------------------------------------+ 
+ |----- FUNCAO PARA ORGANIZAR A LISTA DE PROJETOS                 |
+ +----------------------------------------------------------------*/
 void organizarNomesEmProjeto(PTno Lp) {
     PTproj P, noProjetoAnterior;
     PTno ptProjetoAnterior = Lp, ptProjetoAtual = Lp->prox;
@@ -314,7 +329,9 @@ void mostraPorProj(PTno Lp) {
     printf("\n");
 }
 
-/// FUNCAO QUE DEVOLVE O ID DO PROJETO QUE CONSOME MAIS TEMPO
+/*----------------------------------------------------------------+ 
+ |----- FUNCAO QUE DEVOLVE O ID DO PROJETO QUE CONSOME MAIS TEMPO |
+ +----------------------------------------------------------------*/
 int projMaisTempo(PTno Lp) {
     int id, maior = 0;
     int menor;
@@ -341,7 +358,9 @@ int projMaisTempo(PTno Lp) {
     return id;
 }
 
-/// FUNCAO QUE RETORNA O NOME DO FUNCIONARIO QUE TEM MAIS TEMPO ALOCADO
+/*--------------------------------------------------------------------------+ 
+ |----- FUNCAO QUE RETORNA O NOME DO FUNCIONARIO QUE TEM MAIS TEMPO ALOCADO |
+ +--------------------------------------------------------------------------*/
 void nomeMaisTempo(PTno Ln, char *nome) {
     int maior = 0;
     int menor;
