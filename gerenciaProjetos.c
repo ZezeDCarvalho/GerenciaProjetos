@@ -191,7 +191,7 @@ void mostraPorNome(PTno Ln) {
 PTno converte(PTno Ln) {
     PTno Novo = NULL, Lp;
     PTno ptNoProjeto, ptNoNome;
-    PTnome N, noNome;
+    PTnome noNome, N;
     PTproj P, noProjeto;
 
     /// lista de nomes
