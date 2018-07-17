@@ -25,7 +25,6 @@ typedef struct no * PTno; // pt no
  +----------------------------------------------------------------*/
 typedef struct nomeNo {
     char nome[10]; // nome do funcionario
-
     union {
         int tmp; // tempo OU
         PTno lProj; // lista de projetos
@@ -52,12 +51,12 @@ typedef struct no {
 } no;
 
 /*----------------------------------------------------------------+ 
- |- FUNCAO GERAL DE INSERCAO NUMA LISTA ENCADEADA ORDENADA GERAL  |
- |  PARAMETROS:                                                   |
- |       1. L =  a lista onde inserir                             |
- |       2. N = o novo no a inserir                               |
- |       3. cmp = funcao de comparacao (ID ou NOME)               |
- |  A FUNCAO RETORNA A LISTA MODIFICADA PELA INSERCAO             |
+ |-- FUNCAO GERAL DE INSERCAO NUMA LISTA ENCADEADA ORDENADA GERAL |
+ |   PARAMETROS:                                                  |
+ |        1. L =  a lista onde inserir                            |
+ |        2. N = o novo no a inserir                              |
+ |        3. cmp = funcao de comparacao (ID ou NOME)              |
+ |   A FUNCAO RETORNA A LISTA MODIFICADA PELA INSERCAO            |
  +----------------------------------------------------------------*/
 PTno insere(PTno L, PTno N, int (*cmp)(const void *, const void *)) {
     PTno P = NULL, Q = L;
@@ -76,11 +75,11 @@ PTno insere(PTno L, PTno N, int (*cmp)(const void *, const void *)) {
 }
 
 /*----------------------------------------------------------------+ 
- |- FUNCAO QUE RETORNA A COMPARACAO DE ID DE NOS                  |
- |  RETORNA:                                                      |
- |       negativo: SE P->info->id < Q->info->id                   |
- |       zero    : SE P->info->id = Q->info->id                   |
- |       positivo: SE P->info->id > Q->info->id                   |
+ |-- FUNCAO QUE RETORNA A COMPARACAO DE ID DE NOS                 |
+ |   RETORNA:                                                     |
+ |        negativo: SE P->info->id < Q->info->id                  |
+ |        zero    : SE P->info->id = Q->info->id                  |
+ |        positivo: SE P->info->id > Q->info->id                  |
  +----------------------------------------------------------------*/
 int compId(const void * P, const void * Q) {
     return ((PTproj) ((PTno) P)->info)->id -
@@ -95,22 +94,23 @@ int compNome(const void * P, const void * Q) {
             ((PTnome) ((PTno) Q)->info)->nome);
 }
 
-/*  FUNCAO QUE CARREGA OS NOMES E OS PROJETOS ONDE ESTA ALOCADO
- *  LE O NUMERO DE PESSOAS.
- *  
- *  PARA CADA PESSOA:
- *      LE O NOME E O NUMERO DE PROJETOS ONDE ESTA ALOCADO
- *
- *  PARA CADA PROJETO:
- *      LE A IDENTIFICACAO E O TEMPO ALOCADO NO PROJETO
- *   
- * EXEMPLO DE ENTRADA DE DADOS:
- * ----------------------------
- * 3
- * Bruno 3 4 8 3 10 5 5
- * Daniel 1 5 25
- * Alan 2 3 15 1 5
- */
+/*----------------------------------------------------------------+ 
+ |-- FUNCAO QUE CARREGA OS NOMES E OS PROJETOS ONDE ESTA ALOCADO  |
+ |   LE O NUMERO DE PESSOAS:                                      |
+ |                                                                |
+ |   PARA CADA PESSOA:                                            |
+ |       LE O NOME E O NUMERO DE PROJETOS ONDE ESTA ALOCADO       |
+ |                                                                |
+ |   PARA CADA PROJETO:                                           |
+ |       LE A IDENTIFICACAO E O TEMPO ALOCADO NO PROJETO          |
+ |                                                                |
+ |   - EXEMPLO DE ENTRADA DE DADOS:                               |
+ |   ------------------------------                               |
+ |   3                                                            |
+ |   Bruno 3 4 8 3 10 5 5                                         |
+ |   Daniel 1 5 25                                                |
+ |   Alan 2 3 15 1 5                                              |
+ +----------------------------------------------------------------*/
 PTno carregaDados(void) {
     int id, tmp, nNome, nProj;
     char nome[10];
@@ -158,12 +158,13 @@ PTno carregaDados(void) {
     return lNome;
 }
 
-/*  FUNCAO QUE MOSTRA A LISTA DE PESSOAS E OS PROJETOS EM QUE ESTA ALOCADO
- *  PARA OS DADOS ANTERIORES, APRESENTA:
- *      Alan: [(1,5),(3,15)]
- *      Bruno: [(3,10),(4,8),(5,5)]
- *      Daniel: [(5,25)]
- */
+/*--------------------------------------------------------------------------+ 
+ |-- FUNCAO QUE MOSTRA A LISTA DE PESSOAS E OS PROJETOS EM QUE ESTA ALOCADO |
+ |   PARA OS DADOS ANTERIORES, APRESENTA:                                   |
+ |       Alan: [(1,5),(3,15)]                                               |
+ |       Bruno: [(3,10),(4,8),(5,5)]                                        |
+ |       Daniel: [(5,25)]                                                   |
+ +--------------------------------------------------------------------------*/
 void mostraPorNome(PTno Ln) {
     PTnome N;
     PTproj P;
@@ -184,9 +185,9 @@ void mostraPorNome(PTno Ln) {
     printf("\n");
 }
 
-/*------------------------------------------------------------------------------------------+ 
- |----- FUNCAO QUE CONVERTE A LISTA DE NOMES POR PROJETOS NUMA LISTA DE PROJETOS POR NOMES  |
- +------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------+ 
+ |----- FUNCAO QUE CONVERTE A LISTA DE NOMES POR PROJETOS NUMA LISTA DE PROJETOS POR NOMES |
+ +-----------------------------------------------------------------------------------------*/
 PTno converte(PTno Ln) {
     PTno Novo = NULL, Lp;
     PTno ptNoProjeto, ptNoNome;
@@ -299,14 +300,15 @@ void organizarNomesEmProjeto(PTno Lp) {
     }
 }
 
-/* FUNCAO QUE MOSTRA A LISTA DE PROJETOS E AS PESSOAS ALOCADAS
- * PARA OS DADOS ANTERIORES, DEVE APRESENTAR:
- * ------------------------------------------
- *      1: [(Alan,5)]
- *      3: [(Alan,15),(Bruno,10)]
- *      4: [(Bruno,8)]
- *      5: [(Bruno,5),(Daniel,25)]
- */
+/*----------------------------------------------------------------+ 
+ |-- FUNCAO QUE MOSTRA A LISTA DE PROJETOS E AS PESSOAS ALOCADAS  |
+ |   PARA OS DADOS ANTERIORES, DEVE APRESENTAR:                   |
+ |   ------------------------------------------                   |
+ |       1: [(Alan,5)]                                            |
+ |       3: [(Alan,15),(Bruno,10)]                                |
+ |       4: [(Bruno,8)]                                           |
+ |       5: [(Bruno,5),(Daniel,25)]                               |
+ +----------------------------------------------------------------*/
 void mostraPorProj(PTno Lp) {
     PTno Ln;
     //PTnome N;
@@ -386,12 +388,15 @@ void nomeMaisTempo(PTno Ln, char *nome) {
     }
 }
 
-/// FUNCAO QUE RETORNA O TEMPO TOTAL DOS PROJETOS
+/*----------------------------------------------------------------+ 
+ |----- FUNCAO QUE RETORNA O TEMPO TOTAL DOS PROJETOS             |
+ +----------------------------------------------------------------*/
 int tempoTotal(PTno Ln) {
     int total = 0;
     PTno Lp;
     //PTnome N;
     //PTproj P;
+
     while (Ln) {
         //N = Ln->info;
         //Lp = N->lProj;
@@ -407,17 +412,20 @@ int tempoTotal(PTno Ln) {
     return total;
 }
 
-/* FUNCAO QUE MOSTRA O PERCENTUAL DE TEMPO ALOCADO EM PROJETOS
- * PARA OS DADOS ANTERIORES, DEVE APRESENTAR:
- * ------------------------------------------
- *      Alan - 29.41%
- *      Bruno - 33.82%
- *      Daniel - 36.76%
- */
+/*----------------------------------------------------------------+ 
+ |-- FUNCAO QUE MOSTRA O PERCENTUAL DE TEMPO ALOCADO EM PROJETOS  |
+ |   PARA OS DADOS ANTERIORES, DEVE APRESENTAR:                   |
+ |   ------------------------------------------                   |
+ |       Alan - 29.41%                                            |
+ |       Bruno - 33.82%                                           |
+ |       Daniel - 36.76%                                          |
+ +----------------------------------------------------------------*/
 void mostraPercAlocado(PTno Ln) {
-    PTno Lp;
     double hrsTotalProjetos = tempoTotal(Ln);
     double horasPorPessoa = 0;
+    PTno Lp;
+    //PTnome N;
+    //PTproj P;    
 
     printf("\n");
     while (Ln) {
@@ -427,10 +435,10 @@ void mostraPercAlocado(PTno Ln) {
         horasPorPessoa = 0;
         while (Lp) {
             //P = Lp->info;
-            //total += P->tmp;
+            //horasPorPessoa += P->tmp;
             horasPorPessoa += ((PTproj) Lp->info)->tmp;
             Lp = Lp->prox;
-        }
+        } /// calculo da porcentagem  (horasPorPessoa/hrsTotalProjetos)*PORCENTO
         printf("%s - %.2f%%\n", ((PTnome) Ln->info)->nome, (horasPorPessoa * PORCENTO) / hrsTotalProjetos);
         Ln = Ln->prox;
     }
